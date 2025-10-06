@@ -1,50 +1,86 @@
-# React + TypeScript + Vite
+# Get started
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Dev commands
 
-Currently, two official plugins are available:
-
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
-
-- Configure the top-level `parserOptions` property like this:
-
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```bash
+npm install
+npm run prepare
+npm run dev
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+## Git commits/branches example
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+1) Branch name example: `task-111`
+2) Commit name example: 
+- `feat: add new button` <b>new feature</b>
+- `fix: change visibility` <b>fix</b>
+- `dx: update husky` <b>improve developer experience</b>
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+---
+
+# Project Architecture & Dependency Rules
+
+This document explains the source layout, allowed dependencies, and practical recipes to keep the codebase modular and maintainable.
+
+---
+
+## TL;DR
+
+* **Folders:** `src/app`, `src/modules`, `src/shared`.
+* **`shared`** holds cross‑project building blocks (`utils`, `hooks`, `ui`, `types`, `constants`).
+* **`modules`** host self‑contained features; each module mirrors the `shared` subfolder layout for its internal reuse.
+* **`app`** is the composition layer (e.g., pages, routing), assembling UI from `modules` and `shared`.
+* **Forbidden imports:**
+
+    * `shared` **must not** import from `app` or `modules`.
+    * `modules` **must not** import from `app`.
+* **Allowed imports:**
+
+    * `app` → `modules`, `shared`
+    * `modules` → `shared`, other `modules` (peer module usage is allowed)
+
+---
+
+## Source Layout
+
 ```
+src/
+  app/
+    pages/
+    ...
+  modules/
+    <module-name-a>/
+      utils/
+      hooks/
+      ui/
+      types/
+      constants/
+      index.ts
+    <module-name-b>/
+      ...
+  shared/
+    utils/
+    hooks/
+    ui/
+    types/
+    constants/
+    index.ts
+```
+
+### What lives where
+
+* **`shared`**: Truly reusable pieces **without** domain knowledge. Example: `useDebounce`, `Button`, `ThemeProvider`, `Result<T>` type, `DATE_FORMATS`.
+* **`modules/*`**: Feature scopes (domain logic + UI). Example: `modules/cart`, `modules/auth`. Each may expose a public API via `index.ts`.
+* **`app`**: Routing, layout, page composition. Pages import from `modules` and `shared` to build screens.
+
+---
+
+## Import Matrix
+
+| From ↓ \ To → | app |           modules | shared |
+| ------------- | --: | ----------------: | -----: |
+| **app**       |   — |                 ✅ |      ✅ |
+| **modules**   |   ❌ | ✅ (other modules) |      ✅ |
+| **shared**    |   ❌ |                 ❌ |      — |
+
+---
