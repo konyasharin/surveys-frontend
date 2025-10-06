@@ -1,7 +1,7 @@
 import { FC } from 'react';
 
 const App: FC = () => {
-  return <>123</>;
+  return <div className={'bg-red-400'}>123</div>;
 };
 
 export default App;
