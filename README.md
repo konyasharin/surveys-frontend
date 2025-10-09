@@ -10,11 +10,11 @@ npm run dev
 
 ## Git commits/branches example
 
-1) Branch name example: `task-111`
+1) Branch name example: `task/111`
 2) Commit name example: 
-- `feat: add new button` <b>new feature</b>
-- `fix: change visibility` <b>fix</b>
-- `dx: update husky` <b>improve developer experience</b>
+- `SV-111 feat: add new button` <b>new feature</b>
+- `SV-111 fix: change visibility` <b>fix</b>
+- `SV-111 dx: update husky` <b>improve developer experience</b>
 
 ---
 
