@@ -12,9 +12,9 @@ npm run dev
 
 1) Branch name example: `task/111`
 2) Commit name example: 
-- `SV-111 feat: add new button` <b>new feature</b>
-- `SV-111 fix: change visibility` <b>fix</b>
-- `SV-111 dx: update husky` <b>improve developer experience</b>
+- `feat: add new button` <b>new feature</b>
+- `fix: change visibility` <b>fix</b>
+- `dx: update husky` <b>improve developer experience</b>
 
 ---
 
