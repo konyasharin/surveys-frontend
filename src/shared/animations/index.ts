@@ -1,0 +1,1 @@
+export { useImpulseAnimation } from './hooks';
